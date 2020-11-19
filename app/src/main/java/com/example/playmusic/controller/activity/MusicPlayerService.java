@@ -12,7 +12,7 @@ import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import android.widget.Toast;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
@@ -43,7 +43,7 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
     @Override
     public IBinder onBind(Intent intent) {
         mMusic = (Music) intent.getSerializableExtra(EXTRA_MUSIC);
-
+        mMediaPlayer = new MediaPlayer();
         play(mMusic);
         return mIBinder;
     }
@@ -100,8 +100,7 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
     }
 
     public void play(Music music) {
-        mMediaPlayer = new MediaPlayer();
-        Toast.makeText(this, ""+mMediaPlayer, Toast.LENGTH_SHORT).show();
+
 
         try {
             //player.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
@@ -115,15 +114,12 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
             //mMediaPlayer.prepareAsync(); // prepare async to not block main thread
             mMediaPlayer.prepare();
             mMediaPlayer.start();
-            mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    stopForeground(true);
-                    stopSelf();
-                }
+            mMediaPlayer.setOnCompletionListener(mp -> {
+                stopForeground(true);
+                stopSelf();
             });
         } catch (IOException e) {
-            Toast.makeText(this, "Error is : " + music.getAssetPath(), Toast.LENGTH_SHORT).show();
+
         }
 
     }

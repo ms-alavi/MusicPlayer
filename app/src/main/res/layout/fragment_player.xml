@@ -11,20 +11,21 @@
 
     <ImageView
         android:id="@+id/img_player"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
 
     <TextView
+
         android:id="@+id/txt_song_name_player"
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:layout_below="@+id/img_player"
         android:layout_marginHorizontal="50dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="80dp"
         android:gravity="center"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -58,14 +59,14 @@
         android:layout_height="wrap_content"/>
 </LinearLayout>
 
-    <Button
+    <ImageView
         android:id="@+id/btn_pause_play"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_below="@id/lnr_seek_bar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:background="@drawable/ic_pause_f" />
+        android:src="@drawable/ic_pause_f" />
 
     <Button
         android:id="@+id/btn_forward"
