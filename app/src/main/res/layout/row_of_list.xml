@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="music"
+            type="com.example.playmusic.model.Music" />
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/relative_raw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/row_img"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="10dp"
+            android:background="@drawable/ic_music_orange"
+            android:gravity="center_horizontal"
+            android:textAllCaps="true"
+            android:textSize="58sp"
+            tools:text="t" />
+
+        <TextView
+            android:id="@+id/raw_song_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/row_img"
+            android:text="@{music.songName}"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            tools:text="tebvjggjjhgvgst" />
+
+        <!--    <TextView
+                android:layout_marginTop="8dp"
+                android:id="@+id/row_singer_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/raw_song_name"
+                android:layout_toRightOf="@id/row_img"
+                android:layout_margin="5dp"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:text="@{music.singerName}"
+                tools:text="tehkjgfgjfhst" />-->
+
+    </RelativeLayout>
+</layout>
