@@ -81,6 +81,7 @@ public class MusicListFragment extends Fragment  {
 
     private class MusicHolder extends RecyclerView.ViewHolder {
         private RowOfListBinding mBiding;
+        private int mPosition;
 
         public MusicHolder(RowOfListBinding binding) {
             super(binding.getRoot());
@@ -88,7 +89,7 @@ public class MusicListFragment extends Fragment  {
             mBiding.getRoot().setOnClickListener(v -> {
                 /*Music music = mBiding.getMusic();
                mPlayMusicRepository.play(music);*/
-               Intent intent=PlayerActivity.newIntent(getContext(),mBiding.getMusic());
+               Intent intent=PlayerActivity.newIntent(getContext(),mBiding.getMusic(), mPosition);
                startActivity(intent);
 
             });
@@ -96,6 +97,7 @@ public class MusicListFragment extends Fragment  {
 
         public void bindTask(Music music,int position) {
             mBiding.setMusic(music);
+            mPosition=position;
             if (position%2!=0){
                 mBiding.relativeRaw.setBackgroundResource(R.color.gray_dark);
             }

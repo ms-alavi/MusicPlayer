@@ -1,4 +1,4 @@
-package com.example.playmusic.controller.activity;
+package com.example.playmusic.controller.services;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
@@ -24,15 +25,18 @@ import com.example.playmusic.model.Music;
 import java.io.IOException;
 
 public class MusicPlayerService extends Service implements MediaPlayer.OnPreparedListener {
-    public static final String EXTRA_MUSIC = "com.example.playmusic.controller.activity.extraMusic";
-    public static final String ACTION_PLAY = "com.example.playmusic.controller.activity.play";
+    public static final String EXTRA_MUSIC = "com.example.playmusic.extraMusic";
+    public static final String ACTION_PLAY = "com.example.playmusic.actionPlay";
+    public static final String ACTION_NEXT_PREV = "com.example.playmusic.actionNextPrev";
+
     private Music mMusic;
 
     private MediaPlayer mMediaPlayer = null;
     private IBinder mIBinder =new MusicPlayerBinder() ;
 
-    public static Intent newIntent(Context context, Music music) {
+    public static Intent newIntent(Context context, Music music,@NonNull String action) {
         Intent intent = new Intent(context, MusicPlayerService.class);
+        intent.setAction(action);
         intent.putExtra(EXTRA_MUSIC, music);
         return intent;
     }
@@ -44,7 +48,8 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
     public IBinder onBind(Intent intent) {
         mMusic = (Music) intent.getSerializableExtra(EXTRA_MUSIC);
         mMediaPlayer = new MediaPlayer();
-        play(mMusic);
+      setUpMediaPlayer(mMusic);
+
         return mIBinder;
     }
 
@@ -52,9 +57,7 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.getAction() == null) {
-            intent.setAction("");
-        }
+
         switch (intent.getAction()) {
             case ACTION_PLAY:
                 if (mMediaPlayer.isPlaying()) {
@@ -63,21 +66,16 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
                     mMediaPlayer.start();
                 }
                 break;
+
             default:
 
-                Intent playerFragmentIntent = new Intent(this, PlayerFragment.class);
-                playerFragmentIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                Intent playIntent = new Intent(this, MusicPlayerService.class);
-                playIntent.setAction(ACTION_PLAY);
-                PendingIntent playPendingIntent = PendingIntent.getService(this, 0, playIntent, 0);
-                createNotification(playerFragmentIntent, playPendingIntent);
                 break;
 
         }
         return START_STICKY;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+/*    @RequiresApi(api = Build.VERSION_CODES.O)
     private void createNotification(Intent playerFragmentIntent, PendingIntent playPendingIntent) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             NotificationManager notificationManager=getSystemService(NotificationManager.class);
@@ -97,13 +95,13 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
                     .build();
             startForeground(101,notification);
         }
-    }
+    }*/
 
-    public void play(Music music) {
+    public void setUpMediaPlayer(Music music) {
 
 
         try {
-            //player.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+
             AssetFileDescriptor afd = this.getAssets().openFd(music.getAssetPath());
             mMediaPlayer.setDataSource(afd.getFileDescriptor(),
                     afd.getStartOffset(),
@@ -113,12 +111,19 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
             //ToDo : I can't use prepareAsync
             //mMediaPlayer.prepareAsync(); // prepare async to not block main thread
             mMediaPlayer.prepare();
-            mMediaPlayer.start();
+            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mMediaPlayer.start();
+
+                }
+            });
             mMediaPlayer.setOnCompletionListener(mp -> {
                 stopForeground(true);
                 stopSelf();
             });
         } catch (IOException e) {
+            Log.d("MPS",e.getMessage(),e);
 
         }
 
@@ -133,7 +138,6 @@ public class MusicPlayerService extends Service implements MediaPlayer.OnPrepare
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mMediaPlayer != null) mMediaPlayer.release();
 
     }
 

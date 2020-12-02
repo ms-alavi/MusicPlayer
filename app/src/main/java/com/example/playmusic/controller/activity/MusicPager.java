@@ -29,7 +29,8 @@ public class MusicPager extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMusicPagerActivityBinding= DataBindingUtil.setContentView(this, R.layout.music_pager_activity);
+        mMusicPagerActivityBinding= DataBindingUtil
+                .setContentView(this, R.layout.music_pager_activity);
 
         FixedTabsPagerAdapter adapter=new FixedTabsPagerAdapter(this);
         mMusicPagerActivityBinding.viewPager.setAdapter(adapter);

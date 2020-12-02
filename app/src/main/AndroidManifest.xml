@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PlayMusic">
         <service
-            android:name=".controller.activity.MusicPlayerService"
+            android:name=".controller.services.MusicPlayerService"
             android:enabled="true"
             android:exported="true"></service>
 
